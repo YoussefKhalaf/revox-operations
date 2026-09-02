@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# REVOX Operations
 
-## Getting Started
+Internal operations and financial tracking system for REVOX. This application is separate from the Revox OS SaaS product and is intentionally small in scope.
 
-First, run the development server:
+## Product purpose
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+REVOX Operations helps the REVOX team record apartment revenues, operating expenses, cash advances, and team activity in one secure internal system. Amounts are tracked in **EGP** only.
+
+## Completed MVP modules
+
+- Authentication and role-aware access
+- Operation Team management
+- Apartments management
+- Revenue and expense entry
+- Cash advances, returned amounts, and expense-to-advance linking
+- Real Admin and Operation dashboards with database-backed financial analysis
+
+## Admin capabilities
+
+- Dashboard with period filter, apartment performance, and monthly performance
+- Manage apartments, revenues, expenses, cash advances, and operation team members
+- Record advance returns and link expenses to advances
+- View outstanding advance balances and operating profit/loss
+
+## Operation capabilities
+
+- Personal dashboard with current-month expenses and advance balances
+- View active apartments
+- Record and review own expenses
+- View own cash advances
+- Optionally link new expenses to open advances
+
+## Roles and access
+
+| Role | Access |
+|------|--------|
+| `admin` | Dashboard, Apartments, Income & Expenses, Cash Advances, Operation Team |
+| `operation` | Dashboard, Apartments, My Expenses, My Cash Advances |
+
+Role information always comes from `public.profiles` on the server. Operation access also requires an active linked `operation_members` record.
+
+## Environment variables
+
+Configure these in `.env.local`:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+
+Do not commit `.env.local`. No service-role key belongs in application code or Git.
+
+## Database migrations
+
+Apply in order through the linked Supabase workflow or SQL editor:
+
+1. `001_initial_schema.sql` — tables, views, RLS, base helpers
+2. `002_enforce_active_operation_member.sql` — active linked Operation member enforcement
+3. `003_cash_advance_integrity.sql` — capacity triggers and authenticated DELETE removal
+4. `004_dashboard_analysis.sql` — dashboard aggregation functions
+
+## Database setup workflow
+
+1. Install dependencies with `npm install`
+2. Copy `.env.example` to `.env.local`
+3. Fill in the Supabase environment variables
+4. Apply migrations `001` through `004` to the connected project
+5. Create Auth users manually in Supabase
+6. Promote the first admin profile in `public.profiles`
+
+## Core profit formula
+
+```text
+Net Profit = Recorded Apartment Revenue − Recorded Apartment Expenses
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Cash-advance balance formula
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+Remaining Balance = Issued Amount − Linked Expenses − Returned Amounts
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Issuing a cash advance is **not** an apartment expense.
 
-## Learn More
+Returning unused advance money is **not** revenue.
 
-To learn more about Next.js, take a look at the following resources:
+Only recorded expense rows affect apartment expenses and dashboard expense totals.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Local run commands
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+## Validation commands
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run lint
+npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Current limitations
+
+- No receipt upload
+- No owners, bookings, guests, reservations, housekeeping, or maintenance workflows
+- No multi-currency support
+- No advanced accounting, taxes, commissions, or owner payouts
+- No exports, notifications, or external integrations
+- Not deployed yet
+
+## Tech stack
+
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS v4
+- Supabase (`@supabase/supabase-js`, `@supabase/ssr`)
