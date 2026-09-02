@@ -105,7 +105,18 @@ npm run build
 - No multi-currency support
 - No advanced accounting, taxes, commissions, or owner payouts
 - No exports, notifications, or external integrations
-- Not deployed yet
+
+## Deployment
+
+- **Live app:** https://revox-operations.vercel.app
+- **Source code:** https://github.com/YoussefKhalaf/revox-operations (public)
+
+The live URL is publicly reachable, but all business data requires sign-in. Configure production environment variables on Vercel:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+
+Supabase Auth must allow the production site URL and redirect URLs for the Vercel domain.
 
 ## Tech stack
 
