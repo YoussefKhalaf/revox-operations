@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { AdvanceStatusBadge } from "@/components/cash-advances/advance-status-badge";
+import { CashAdvanceDetailActions } from "@/components/cash-advances/cash-advance-detail-actions";
 import { getAdminPageContext } from "@/lib/auth/admin-page";
 import {
   fetchCashAdvanceBalanceById,
@@ -74,6 +75,7 @@ export default async function CashAdvanceDetailPage({ params }: CashAdvanceDetai
                 Record return
               </Link>
             )}
+            <CashAdvanceDetailActions advanceId={id} />
           </div>
         </section>
 
@@ -148,6 +150,9 @@ export default async function CashAdvanceDetailPage({ params }: CashAdvanceDetai
                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted">
                       Amount
                     </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -163,6 +168,13 @@ export default async function CashAdvanceDetailPage({ params }: CashAdvanceDetai
                       <td className="px-4 py-3 text-sm text-muted">{expense.description}</td>
                       <td className="px-4 py-3 text-sm font-medium text-foreground">
                         {formatEgpAmount(expense.amount)}
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <CashAdvanceDetailActions
+                          advanceId={id}
+                          expenseId={expense.id}
+                          showExpenseDelete
+                        />
                       </td>
                     </tr>
                   ))}
@@ -210,12 +222,19 @@ export default async function CashAdvanceDetailPage({ params }: CashAdvanceDetai
                         {advanceReturn.notes?.trim() || "—"}
                       </td>
                       <td className="px-4 py-3 text-sm">
-                        <Link
-                          href={`/cash-advances/${id}/returns/${advanceReturn.id}/edit`}
-                          className="font-medium text-accent hover:underline"
-                        >
-                          Edit
-                        </Link>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <Link
+                            href={`/cash-advances/${id}/returns/${advanceReturn.id}/edit`}
+                            className="font-medium text-accent hover:underline"
+                          >
+                            Edit
+                          </Link>
+                          <CashAdvanceDetailActions
+                            advanceId={id}
+                            returnId={advanceReturn.id}
+                            showReturnDelete
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { deleteExpenseAction } from "@/app/actions/delete-records";
+import { DeleteRecordButton } from "@/components/delete-record-button";
 import { formatEgpAmount } from "@/lib/finance/amount";
 import { formatApartmentLabel } from "@/lib/finance/types";
 import type { ExpenseListItem } from "@/lib/expenses/types";
@@ -76,12 +78,19 @@ export function ExpenseTable({ expenses }: ExpenseTableProps) {
                   {formatEgpAmount(expense.amount)}
                 </td>
                 <td className="px-4 py-3 text-sm">
-                  <Link
-                    href={`/income-expenses/expenses/${expense.id}/edit`}
-                    className="font-medium text-accent hover:underline"
-                  >
-                    Edit
-                  </Link>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Link
+                      href={`/income-expenses/expenses/${expense.id}/edit`}
+                      className="font-medium text-accent hover:underline"
+                    >
+                      Edit
+                    </Link>
+                    <DeleteRecordButton
+                      recordId={expense.id}
+                      confirmMessage="Delete this expense entry? This cannot be undone."
+                      deleteAction={deleteExpenseAction}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}
@@ -107,12 +116,19 @@ export function ExpenseTable({ expenses }: ExpenseTableProps) {
                   {formatEgpAmount(expense.amount)}
                 </p>
               </div>
-              <Link
-                href={`/income-expenses/expenses/${expense.id}/edit`}
-                className="text-sm font-medium text-accent hover:underline"
-              >
-                Edit
-              </Link>
+              <div className="flex flex-col items-end gap-2">
+                <Link
+                  href={`/income-expenses/expenses/${expense.id}/edit`}
+                  className="text-sm font-medium text-accent hover:underline"
+                >
+                  Edit
+                </Link>
+                <DeleteRecordButton
+                  recordId={expense.id}
+                  confirmMessage="Delete this expense entry? This cannot be undone."
+                  deleteAction={deleteExpenseAction}
+                />
+              </div>
             </div>
             <p className="mt-3 text-sm text-muted">
               <span className="text-foreground">Funding: </span>

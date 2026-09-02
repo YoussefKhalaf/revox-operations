@@ -1,4 +1,8 @@
 import Link from "next/link";
+import {
+  deleteApartmentAction,
+} from "@/app/actions/delete-records";
+import { DeleteRecordButton } from "@/components/delete-record-button";
 import type { Apartment } from "@/lib/apartments/types";
 
 type ApartmentTableProps = {
@@ -7,6 +11,24 @@ type ApartmentTableProps = {
 
 function formatOptional(value: string | null) {
   return value && value.trim().length > 0 ? value : "—";
+}
+
+function RowActions({ apartmentId }: { apartmentId: string }) {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <Link
+        href={`/apartments/${apartmentId}/edit`}
+        className="font-medium text-accent hover:underline"
+      >
+        Edit
+      </Link>
+      <DeleteRecordButton
+        recordId={apartmentId}
+        confirmMessage="Delete this apartment? This cannot be undone."
+        deleteAction={deleteApartmentAction}
+      />
+    </div>
+  );
 }
 
 export function ApartmentTable({ apartments }: ApartmentTableProps) {
@@ -43,12 +65,7 @@ export function ApartmentTable({ apartments }: ApartmentTableProps) {
                   {apartment.status === "active" ? "Active" : "Inactive"}
                 </td>
                 <td className="px-4 py-3 text-sm">
-                  <Link
-                    href={`/apartments/${apartment.id}/edit`}
-                    className="font-medium text-accent hover:underline"
-                  >
-                    Edit
-                  </Link>
+                  <RowActions apartmentId={apartment.id} />
                 </td>
               </tr>
             ))}
@@ -68,12 +85,7 @@ export function ApartmentTable({ apartments }: ApartmentTableProps) {
                 <p className="mt-1 text-sm text-muted">{formatOptional(apartment.unit_code)}</p>
                 <p className="text-sm text-muted">{formatOptional(apartment.address)}</p>
               </div>
-              <Link
-                href={`/apartments/${apartment.id}/edit`}
-                className="text-sm font-medium text-accent hover:underline"
-              >
-                Edit
-              </Link>
+              <RowActions apartmentId={apartment.id} />
             </div>
             <p className="mt-3 text-sm">
               <span className="text-muted">Status: </span>

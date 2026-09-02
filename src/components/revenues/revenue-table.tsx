@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { deleteRevenueAction } from "@/app/actions/delete-records";
+import { DeleteRecordButton } from "@/components/delete-record-button";
 import { formatEgpAmount } from "@/lib/finance/amount";
 import { formatApartmentLabel } from "@/lib/finance/types";
 import type { RevenueListItem } from "@/lib/revenues/types";
@@ -60,12 +62,19 @@ export function RevenueTable({ revenues }: RevenueTableProps) {
                   {formatEgpAmount(revenue.amount)}
                 </td>
                 <td className="px-4 py-3 text-sm">
-                  <Link
-                    href={`/income-expenses/revenues/${revenue.id}/edit`}
-                    className="font-medium text-accent hover:underline"
-                  >
-                    Edit
-                  </Link>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Link
+                      href={`/income-expenses/revenues/${revenue.id}/edit`}
+                      className="font-medium text-accent hover:underline"
+                    >
+                      Edit
+                    </Link>
+                    <DeleteRecordButton
+                      recordId={revenue.id}
+                      confirmMessage="Delete this revenue entry? This cannot be undone."
+                      deleteAction={deleteRevenueAction}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}
@@ -91,12 +100,19 @@ export function RevenueTable({ revenues }: RevenueTableProps) {
                   {formatEgpAmount(revenue.amount)}
                 </p>
               </div>
+            <div className="flex flex-col items-end gap-2">
               <Link
                 href={`/income-expenses/revenues/${revenue.id}/edit`}
                 className="text-sm font-medium text-accent hover:underline"
               >
                 Edit
               </Link>
+              <DeleteRecordButton
+                recordId={revenue.id}
+                confirmMessage="Delete this revenue entry? This cannot be undone."
+                deleteAction={deleteRevenueAction}
+              />
+            </div>
             </div>
             <p className="mt-3 text-sm text-muted">
               <span className="text-foreground">Source: </span>

@@ -6,6 +6,9 @@ const ADVANCE_SAVE_ERROR =
 const RETURN_SAVE_ERROR = "Unable to record the returned amount. Please try again.";
 const EXPENSE_SAVE_ERROR =
   "Unable to save the financial entry. Please review the information and try again.";
+const DELETE_ERROR = "Unable to delete this record. Please try again.";
+const DELETE_BLOCKED_ERROR =
+  "This record cannot be deleted because other records still reference it. Remove linked records first or set the item to inactive instead.";
 
 export function mapDatabaseError(error: { message?: string } | null): string {
   const message = error?.message ?? "";
@@ -39,10 +42,26 @@ export function mapExpenseSaveError(error: { message?: string } | null): string 
   return mapDatabaseError(error) || EXPENSE_SAVE_ERROR;
 }
 
+export function mapDeleteError(error: { message?: string } | null): string {
+  const message = error?.message ?? "";
+
+  if (message.includes("DELETE_BLOCKED_REFERENCES")) {
+    return DELETE_BLOCKED_ERROR;
+  }
+
+  if (message.includes("FORBIDDEN") || message.includes("NOT_FOUND")) {
+    return DELETE_ERROR;
+  }
+
+  return DELETE_ERROR;
+}
+
 export {
   BALANCE_ERROR,
   MEMBER_MISMATCH_ERROR,
   ADVANCE_SAVE_ERROR,
   RETURN_SAVE_ERROR,
   EXPENSE_SAVE_ERROR,
+  DELETE_ERROR,
+  DELETE_BLOCKED_ERROR,
 };

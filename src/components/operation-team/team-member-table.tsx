@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { deleteOperationMemberAction } from "@/app/actions/delete-records";
+import { DeleteRecordButton } from "@/components/delete-record-button";
 import type { OperationMember } from "@/lib/operation-team/types";
 
 type TeamMemberTableProps = {
@@ -49,12 +51,19 @@ export function TeamMemberTable({ members }: TeamMemberTableProps) {
                   {member.user_id ? "Linked" : "Not linked"}
                 </td>
                 <td className="px-4 py-3 text-sm">
-                  <Link
-                    href={`/operation-team/${member.id}/edit`}
-                    className="font-medium text-accent hover:underline"
-                  >
-                    Edit
-                  </Link>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Link
+                      href={`/operation-team/${member.id}/edit`}
+                      className="font-medium text-accent hover:underline"
+                    >
+                      Edit
+                    </Link>
+                    <DeleteRecordButton
+                      recordId={member.id}
+                      confirmMessage="Delete this team member? Related advances or expenses must be removed first."
+                      deleteAction={deleteOperationMemberAction}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}
@@ -74,12 +83,19 @@ export function TeamMemberTable({ members }: TeamMemberTableProps) {
                 <p className="mt-1 text-sm text-muted">{formatOptional(member.email)}</p>
                 <p className="text-sm text-muted">{formatOptional(member.phone)}</p>
               </div>
-              <Link
-                href={`/operation-team/${member.id}/edit`}
-                className="text-sm font-medium text-accent hover:underline"
-              >
-                Edit
-              </Link>
+              <div className="flex flex-col items-end gap-2">
+                <Link
+                  href={`/operation-team/${member.id}/edit`}
+                  className="text-sm font-medium text-accent hover:underline"
+                >
+                  Edit
+                </Link>
+                <DeleteRecordButton
+                  recordId={member.id}
+                  confirmMessage="Delete this team member? Related advances or expenses must be removed first."
+                  deleteAction={deleteOperationMemberAction}
+                />
+              </div>
             </div>
             <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
               <div>

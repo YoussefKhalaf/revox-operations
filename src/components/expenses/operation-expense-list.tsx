@@ -1,3 +1,5 @@
+import { deleteOperationExpenseAction } from "@/app/actions/delete-records";
+import { DeleteRecordButton } from "@/components/delete-record-button";
 import { formatEgpAmount } from "@/lib/finance/amount";
 import { formatApartmentLabel } from "@/lib/finance/types";
 import type { OperationExpenseListItem } from "@/lib/expenses/types";
@@ -44,6 +46,9 @@ export function OperationExpenseList({ expenses }: OperationExpenseListProps) {
               <th scope="col" className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted">
                 Amount
               </th>
+              <th scope="col" className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -59,6 +64,13 @@ export function OperationExpenseList({ expenses }: OperationExpenseListProps) {
                 <td className="px-4 py-3 text-sm font-medium text-foreground">
                   {formatEgpAmount(expense.amount)}
                 </td>
+                <td className="px-4 py-3 text-sm">
+                  <DeleteRecordButton
+                    recordId={expense.id}
+                    confirmMessage="Delete this expense? This cannot be undone."
+                    deleteAction={deleteOperationExpenseAction}
+                  />
+                </td>
               </tr>
             ))}
           </tbody>
@@ -71,15 +83,24 @@ export function OperationExpenseList({ expenses }: OperationExpenseListProps) {
             key={expense.id}
             className="rounded-lg border border-border bg-card p-4 shadow-sm"
           >
-            <p className="text-sm font-medium text-foreground">
-              {formatDisplayDate(expense.expense_date)}
-            </p>
-            <p className="mt-1 text-sm text-foreground">
-              {formatApartmentLabel(expense.apartment)}
-            </p>
-            <p className="mt-2 text-sm font-semibold text-foreground">
-              {formatEgpAmount(expense.amount)}
-            </p>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-medium text-foreground">
+                  {formatDisplayDate(expense.expense_date)}
+                </p>
+                <p className="mt-1 text-sm text-foreground">
+                  {formatApartmentLabel(expense.apartment)}
+                </p>
+                <p className="mt-2 text-sm font-semibold text-foreground">
+                  {formatEgpAmount(expense.amount)}
+                </p>
+              </div>
+              <DeleteRecordButton
+                recordId={expense.id}
+                confirmMessage="Delete this expense? This cannot be undone."
+                deleteAction={deleteOperationExpenseAction}
+              />
+            </div>
             <p className="mt-3 text-sm text-muted">
               <span className="text-foreground">Funding: </span>
               {formatFunding(expense)}

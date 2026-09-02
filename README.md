@@ -56,6 +56,7 @@ Apply in order through the linked Supabase workflow or SQL editor:
 2. `002_enforce_active_operation_member.sql` — active linked Operation member enforcement
 3. `003_cash_advance_integrity.sql` — capacity triggers and authenticated DELETE removal
 4. `004_dashboard_analysis.sql` — dashboard aggregation functions
+5. `005_admin_delete_records.sql` — secure admin and operation delete functions
 
 ## Database setup workflow
 

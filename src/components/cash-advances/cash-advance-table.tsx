@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { deleteCashAdvanceAction } from "@/app/actions/delete-records";
 import { AdvanceStatusBadge } from "@/components/cash-advances/advance-status-badge";
+import { DeleteRecordButton } from "@/components/delete-record-button";
 import { formatEgpAmount } from "@/lib/finance/amount";
 import type { CashAdvanceListItem } from "@/lib/cash-advances/types";
 
@@ -72,7 +74,7 @@ export function CashAdvanceTable({ advances }: CashAdvanceTableProps) {
                   <AdvanceStatusBadge remainingBalance={advance.remaining_balance} />
                 </td>
                 <td className="px-4 py-3 text-sm">
-                  <div className="flex gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <Link
                       href={`/cash-advances/${advance.cash_advance_id}`}
                       className="font-medium text-accent hover:underline"
@@ -85,6 +87,11 @@ export function CashAdvanceTable({ advances }: CashAdvanceTableProps) {
                     >
                       Edit
                     </Link>
+                    <DeleteRecordButton
+                      recordId={advance.cash_advance_id}
+                      confirmMessage="Delete this cash advance? Linked expenses or returns must be removed first."
+                      deleteAction={deleteCashAdvanceAction}
+                    />
                   </div>
                 </td>
               </tr>
@@ -111,7 +118,7 @@ export function CashAdvanceTable({ advances }: CashAdvanceTableProps) {
               </div>
               <AdvanceStatusBadge remainingBalance={advance.remaining_balance} />
             </div>
-            <div className="mt-3 flex gap-3 text-sm">
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
               <Link
                 href={`/cash-advances/${advance.cash_advance_id}`}
                 className="font-medium text-accent hover:underline"
@@ -124,6 +131,11 @@ export function CashAdvanceTable({ advances }: CashAdvanceTableProps) {
               >
                 Edit
               </Link>
+              <DeleteRecordButton
+                recordId={advance.cash_advance_id}
+                confirmMessage="Delete this cash advance? Linked expenses or returns must be removed first."
+                deleteAction={deleteCashAdvanceAction}
+              />
             </div>
           </article>
         ))}
